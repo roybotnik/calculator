@@ -16,4 +16,5 @@ body {
   border-radius: 6px;
   border: 1px solid #AAA;
   overflow: hidden;
+  text-align: right;
 }

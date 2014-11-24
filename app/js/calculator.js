@@ -7,6 +7,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.secondOperand = '';
   $scope.allowedOperators = ['+','-','/','*'];
 
+  // Performs a calculation using the first and second operands and the operator.
   $scope.calculate = function () {
     var result = eval($scope.firstOperand + $scope.operator + $scope.secondOperand);
     $scope.firstOperand = result;
@@ -15,6 +16,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     return result;
   };
 
+  // Clears operands, operator, and resets display value
   $scope.clear = function () {
     $scope.displayValue = 0;
     $scope.operator = null;
@@ -22,12 +24,15 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     $scope.secondOperand = '';
   }
 
+  // Determines whether a character is an operator
   $scope.isOperator = function (input) {
     var isop = $scope.allowedOperators.indexOf(input) !== -1;
     console.log(isop);
     return isop;
   }
 
+  // Handles input values and either stores them for calculation,
+  // performs, the calculation, or clears the display.
   $scope.processInput = function (input) {
     if (input === 'c') {
       $scope.clear();
@@ -48,8 +53,8 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
           $scope.operator = input;
           $scope.displayValue = input;
         }
-        return;
       }
+      return;
     }
 
     if ($scope.operator) {
