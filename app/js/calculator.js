@@ -5,13 +5,14 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.operator = null;
   $scope.firstOperand = '';
   $scope.secondOperand = '';
+  $scope.cachedOperator = null;
+  $scope.cachedSecondOperand = null;
   $scope.allowedOperators = ['+','-','/','*'];
 
   // Performs a calculation using the first and second operands and the operator.
   $scope.calculate = function () {
     var result = eval($scope.firstOperand + $scope.operator + $scope.secondOperand);
     $scope.firstOperand = result;
-    $scope.secondOperand = '';
     $scope.displayValue = result;
     return result;
   };
@@ -22,13 +23,13 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     $scope.operator = null;
     $scope.firstOperand = '';
     $scope.secondOperand = '';
+    $scope.cachedSecondOperand = null;
+    $scope.cachedOperator = null;
   }
 
   // Determines whether a character is an operator
   $scope.isOperator = function (input) {
-    var isop = $scope.allowedOperators.indexOf(input) !== -1;
-    console.log(isop);
-    return isop;
+    return $scope.allowedOperators.indexOf(input) !== -1;
   }
 
   // Handles input values and either stores them for calculation,
@@ -44,7 +45,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
       return;
     }
 
-    if (isNaN(input)) {
+    if ((input !== '.') && isNaN(input)) {
       if ($scope.firstOperand && $scope.isOperator(input)) {
         if ($scope.isOperator(input)) {
           if ($scope.secondOperand) {
@@ -58,12 +59,24 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     }
 
     if ($scope.operator) {
-      $scope.secondOperand += input;
+      $scope.secondOperand = $scope.newValueForOperand($scope.secondOperand, input);
       $scope.displayValue = $scope.secondOperand;
     } else {
-      $scope.firstOperand += input;
+      $scope.firstOperand = $scope.newValueForOperand($scope.firstOperand, input);
       $scope.displayValue = $scope.firstOperand;
     }
+  };
+
+  $scope.newValueForOperand = function (currentValue, input) {
+    var result = currentValue;
+    if (input === '.') {
+      if (currentValue.indexOf('.') === -1) {
+        result += input;
+      }
+    } else {
+      result += input;
+    }
+    return result;
   };
 
   $scope.$on('keypress', function (event, args) {
