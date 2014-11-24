@@ -1,0 +1,19 @@
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
+#calc {
+  margin: 5px;
+  height: 300px;
+  width: 200px;
+  background-color: #CCC;
+  border: 1px solid #AAA;
+  border-radius: 6px;
+}
+#calc-display {
+  margin: 5px;
+  padding: 5px;
+  background-color: #F0FACA;
+  border-radius: 6px;
+  border: 1px solid #AAA;
+  overflow: hidden;
+}

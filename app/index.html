@@ -4,8 +4,11 @@
     <title>calc</title>
     <script type="text/javascript" src="js/angular.js" defer></script>
     <script type="text/javascript" src="js/calculator.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="css/calculator.css" />
   </head>
-  <body ng-app>
-    Hello World {{ 1 + 2 }}
+  <body ng-app="calculatorApp" ng-controller="KeyPressController" ng-keypress="HandleKeyPress($event)">
+    <div id="calc" ng-controller="CalculationController">
+      <div id="calc-display">{{displayValue}}</div>
+    </div>
   </body>
 </html>
