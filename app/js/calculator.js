@@ -19,50 +19,69 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     return result;
   };
 
+  // Determines whether a character is an operator
+  $scope.isOperator = function (input) {
+    return $scope.allowedOperators.indexOf(input) !== -1;
+  }
+
+  // Processes input values.
+  // Routes the various character types to the appropriate action.
+  $scope.processInput = function (input) {
+    if (input === 'c') {
+      $scope.handleClearInput();
+      return;
+    }
+
+    if (input === '=') {
+      $scope.handleEqualsInput(input);
+      return;
+    }
+
+    if ((input !== '.') && isNaN(input)) {
+      if ($scope.firstOperand && $scope.isOperator(input)) {
+        $scope.handleOperatorInput(input);
+      }
+      return;
+    }
+
+    $scope.handleDigitInput(input);
+  };
+
   // Clears operands, operator, and resets display value
-  $scope.clear = function () {
+  $scope.handleClearInput = function () {
     $scope.displayValue = 0;
     $scope.operator = null;
     $scope.firstOperand = '';
     $scope.secondOperand = '';
   }
 
-  // Determines whether a character is an operator
-  $scope.isOperator = function (input) {
-    return $scope.allowedOperators.indexOf(input) !== -1;
-  }
-
-  // Handles input values and either stores them for calculation,
-  // performs, the calculation, or clears the display.
-  $scope.processInput = function (input) {
-    if (input === 'c') {
-      $scope.clear();
-      return;
+  // Performs calculation and stores values for repeat usage.
+  // To be executed when = is pressed.
+  $scope.handleEqualsInput = function (input) {
+    $scope.calculate();
+    if ($scope.operator) {
+      $scope.repeatOperator = $scope.operator;
+      $scope.repeatOperand = $scope.secondOperand;
+      $scope.operator = null;
+      $scope.secondOperand = '';
     }
+  };
 
-    if (input === '=') {
+  // Sets the current operator and performs calculation if this
+  // operator is entered after an operator and second operand have
+  // already been set.
+  $scope.handleOperatorInput = function (input) {
+    if ($scope.secondOperand && $scope.operator) {
       $scope.calculate();
-      if ($scope.operator) {
-        $scope.repeatOperator = $scope.operator;
-        $scope.repeatOperand = $scope.secondOperand;
-        $scope.operator = null;
-        $scope.secondOperand = '';
-      }
-      return;
+      $scope.secondOperand = '';
     }
+    $scope.operator = input;
+    $scope.displayValue = $scope.firstOperand + " " + input;
+  };
 
-    if ((input !== '.') && isNaN(input)) {
-      if ($scope.firstOperand && $scope.isOperator(input)) {
-        if ($scope.secondOperand && $scope.operator) {
-          $scope.calculate();
-          $scope.secondOperand = '';
-        }
-        $scope.operator = input;
-        $scope.displayValue = $scope.firstOperand + " " + input;
-      }
-      return;
-    }
-
+  // Handles the input of digits. Either updates the value of the first
+  // or second operand depending on the current status of the values.
+  $scope.handleDigitInput = function (input) {
     if ($scope.operator) {
       $scope.secondOperand = $scope.newValueForOperand($scope.secondOperand, input);
       $scope.displayValue = $scope.firstOperand + " " + $scope.operator + " " + $scope.secondOperand;
@@ -72,6 +91,8 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     }
   };
 
+  // Detemines the new value for an operand given the current value
+  // and an input digit. Accounts for the decimal point.
   $scope.newValueForOperand = function (currentValue, input) {
     var result = currentValue;
     if (input === '.') {
@@ -84,6 +105,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     return result;
   };
 
+  // Routes keyboard input to processInput.
   $scope.$on('keypress', function (event, args) {
     $scope.processInput(args[0]);
   });
