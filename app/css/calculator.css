@@ -17,4 +17,5 @@ body {
   border: 1px solid #AAA;
   overflow: hidden;
   text-align: right;
+  word-wrap: break-word;
 }

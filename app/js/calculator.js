@@ -13,7 +13,6 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.calculate = function () {
     var operator = $scope.operator || $scope.repeatOperator;
     var secondOperand = $scope.secondOperand || $scope.repeatOperand;
-    console.log($scope.firstOperand + operator + secondOperand);
     var result = eval($scope.firstOperand + operator + secondOperand);
     $scope.firstOperand = result;
     $scope.displayValue = result;
@@ -54,14 +53,12 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 
     if ((input !== '.') && isNaN(input)) {
       if ($scope.firstOperand && $scope.isOperator(input)) {
-        if ($scope.isOperator(input)) {
-          if ($scope.secondOperand && $scope.operator) {
-            $scope.calculate();
-            $scope.secondOperand = '';
-          }
-          $scope.operator = input;
-          $scope.displayValue = $scope.firstOperand + " " + input;
+        if ($scope.secondOperand && $scope.operator) {
+          $scope.calculate();
+          $scope.secondOperand = '';
         }
+        $scope.operator = input;
+        $scope.displayValue = $scope.firstOperand + " " + input;
       }
       return;
     }
