@@ -92,7 +92,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   });
 }]);
 
-calculatorApp.controller('KeyPressController', ['$scope', function ($scope) {
+calculatorApp.controller('InputController', ['$scope', function ($scope) {
   $scope.HandleKeyPress = function ($event) {
     var character = String.fromCharCode($event.keyCode);
     $scope.$broadcast('keypress', [character]);
