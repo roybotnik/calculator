@@ -3,15 +3,18 @@ calculatorApp = angular.module('calculatorApp', []);
 calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.displayValue = 0;
   $scope.operator = null;
+  $scope.repeatOperator = null;
+  $scope.repeatOperand = null;
   $scope.firstOperand = '';
   $scope.secondOperand = '';
-  $scope.cachedOperator = null;
-  $scope.cachedSecondOperand = null;
   $scope.allowedOperators = ['+','-','/','*'];
 
   // Performs a calculation using the first and second operands and the operator.
   $scope.calculate = function () {
-    var result = eval($scope.firstOperand + $scope.operator + $scope.secondOperand);
+    var operator = $scope.operator || $scope.repeatOperator;
+    var secondOperand = $scope.secondOperand || $scope.repeatOperand;
+    console.log($scope.firstOperand + operator + secondOperand);
+    var result = eval($scope.firstOperand + operator + secondOperand);
     $scope.firstOperand = result;
     $scope.displayValue = result;
     return result;
@@ -23,8 +26,6 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     $scope.operator = null;
     $scope.firstOperand = '';
     $scope.secondOperand = '';
-    $scope.cachedSecondOperand = null;
-    $scope.cachedOperator = null;
   }
 
   // Determines whether a character is an operator
@@ -42,17 +43,24 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 
     if (input === '=') {
       $scope.calculate();
+      if ($scope.operator) {
+        $scope.repeatOperator = $scope.operator;
+        $scope.repeatOperand = $scope.secondOperand;
+        $scope.operator = null;
+        $scope.secondOperand = '';
+      }
       return;
     }
 
     if ((input !== '.') && isNaN(input)) {
       if ($scope.firstOperand && $scope.isOperator(input)) {
         if ($scope.isOperator(input)) {
-          if ($scope.secondOperand) {
+          if ($scope.secondOperand && $scope.operator) {
             $scope.calculate();
+            $scope.secondOperand = '';
           }
           $scope.operator = input;
-          $scope.displayValue = input;
+          $scope.displayValue = $scope.firstOperand + " " + input;
         }
       }
       return;
@@ -60,7 +68,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 
     if ($scope.operator) {
       $scope.secondOperand = $scope.newValueForOperand($scope.secondOperand, input);
-      $scope.displayValue = $scope.secondOperand;
+      $scope.displayValue = $scope.firstOperand + " " + $scope.operator + " " + $scope.secondOperand;
     } else {
       $scope.firstOperand = $scope.newValueForOperand($scope.firstOperand, input);
       $scope.displayValue = $scope.firstOperand;
