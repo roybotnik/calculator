@@ -2,19 +2,15 @@
   "name": "calc",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "js/calculator.js",
   "scripts": {
     "test": "gulp test",
-    "gulp": "gulp",
     "tdd": "gulp tdd"
   },
   "author": "Roy Quader",
   "license": "ISC",
   "devDependencies": {
-    "angular": "^1.3.3",
     "gulp": "^3.8.10",
-    "gulp-connect": "^2.2.0",
-    "gulp-livereload": "^2.1.1",
     "jasmine-core": "^2.1.2",
     "karma": "^0.12.25",
     "karma-jasmine": "^0.3.1",
