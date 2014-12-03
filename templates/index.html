@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/calculator.css" />
   </head>
   <body>
-    <div ng-app="calculatorApp" broadcast-keypress ng-controller="InputController">
+    <div ng-app="calculatorApp" stop-backspace-from-going-back broadcast-keypress ng-controller="InputController">
       <div id="calc" ng-controller="CalculationController">
         <div id="calc-display">{{ '{{displayValue}}' }}</div>
       </div>

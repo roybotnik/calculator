@@ -1,5 +1,6 @@
 calculatorApp = angular.module('calculatorApp', []);
 
+
 calculatorApp.directive('broadcastKeypress', [
   '$document',
   '$rootScope',
@@ -9,7 +10,6 @@ calculatorApp.directive('broadcastKeypress', [
       link: function () {
         $document.bind('keypress', function (e) {
           var character = String.fromCharCode(e.keyCode);
-          $rootScope.lastPressed = character;
           $rootScope.$broadcast('keypress', character);
         });
       }
@@ -135,3 +135,20 @@ calculatorApp.controller('InputController', ['$scope', function ($scope) {
     $scope.$broadcast('inputReceived', args[0]);
   });
 }]);
+
+// Kind of gross, but I really didn't want it to do it.
+calculatorApp.directive('stopBackspaceFromGoingBack', [
+  '$document',
+  function ($document) {
+    return {
+      restrict: 'A',
+      link: function () {
+        $document.bind('keydown', function(e) {
+          if (e.keyCode === 8) {
+            e.preventDefault();
+          }
+        });
+      }
+    }
+  }
+]);
