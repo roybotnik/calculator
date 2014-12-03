@@ -6,10 +6,10 @@
     <script type="text/javascript" src="/static/js/calculator.js" defer></script>
     <link rel="stylesheet" type="text/css" href="/static/css/calculator.css" />
   </head>
-  <body ng-app="calculatorApp">
-    <div id="calc-input" ng-controller="InputController" ng-keypress="HandleKeyPress($event)" ng-keydown="HandleKeyDown($event)">
+  <body>
+    <div ng-app="calculatorApp" broadcast-keypress ng-controller="InputController">
       <div id="calc" ng-controller="CalculationController">
-        <div id="calc-display">{{displayValue}}</div>
+        <div id="calc-display">{{ '{{displayValue}}' }}</div>
       </div>
     </div>
   </body>

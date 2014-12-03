@@ -1,5 +1,22 @@
 calculatorApp = angular.module('calculatorApp', []);
 
+calculatorApp.directive('broadcastKeypress', [
+  '$document',
+  '$rootScope',
+  function ($document, $rootScope) {
+    return {
+      restrict: 'A',
+      link: function () {
+        $document.bind('keypress', function (e) {
+          var character = String.fromCharCode(e.keyCode);
+          $rootScope.lastPressed = character;
+          $rootScope.$broadcast('keypress', character);
+        });
+      }
+    };
+  }
+]);
+
 calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.displayValue = 0;
   $scope.operator = null;
@@ -105,20 +122,15 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     return result;
   };
 
-  // Routes keyboard input to processInput.
-  $scope.$on('keypress', function (event, args) {
+  // Routes input to processInput.
+  $scope.$on('inputReceived', function (event, args) {
     $scope.processInput(args[0]);
+    console.log($scope.displayValue);
   });
 }]);
 
 calculatorApp.controller('InputController', ['$scope', function ($scope) {
-  $scope.HandleKeyDown = function ($event) {
-    if ($event.keyCode === 8) {
-      $event.preventDefault();
-    }
-  };
-  $scope.HandleKeyPress = function ($event) {
-    var character = String.fromCharCode($event.keyCode);
-    $scope.$broadcast('keypress', [character]);
-  };
+  $scope.$on('keypress', function (event, args) {
+    $scope.$broadcast('inputReceived', args[0]);
+  });
 }]);
