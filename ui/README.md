@@ -16,7 +16,7 @@ To perform a single test run:
 npm test
 ```
 
-To automatically run tests as files within the js diretory are edited:
+To automatically run tests as files within the js directory are edited:
 ```
 npm run tdd
 ```
