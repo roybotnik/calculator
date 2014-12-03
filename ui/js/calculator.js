@@ -112,8 +112,13 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 }]);
 
 calculatorApp.controller('InputController', ['$scope', function ($scope) {
+  $scope.HandleKeyDown = function ($event) {
+    if ($event.keyCode === 8) {
+      $event.preventDefault();
+    }
+  };
   $scope.HandleKeyPress = function ($event) {
     var character = String.fromCharCode($event.keyCode);
     $scope.$broadcast('keypress', [character]);
-  }
+  };
 }]);
