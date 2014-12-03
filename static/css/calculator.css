@@ -34,11 +34,11 @@ body {
   border-radius: 5px;
   border: 1px solid #AAA;
 }
-#calc-buttons .wide {
+#calc-buttons a.wide {
   width: 89px;
 }
 
-#calc-buttons .row {
+#calc-buttons a.row {
   margin-right: 80px;
 }
 #calc-numbers {
