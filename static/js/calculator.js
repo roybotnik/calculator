@@ -124,8 +124,9 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 
   // Routes input to processInput.
   $scope.$on('inputReceived', function (event, args) {
-    $scope.processInput(args[0]);
-    console.log($scope.displayValue);
+    $scope.$apply(function () {
+      $scope.processInput(args[0]);
+    });
   });
 }]);
 
