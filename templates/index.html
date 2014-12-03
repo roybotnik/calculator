@@ -10,6 +10,29 @@
     <div ng-app="calculatorApp" stop-backspace-from-going-back broadcast-keypress ng-controller="InputController">
       <div id="calc" ng-controller="CalculationController">
         <div id="calc-display">{{ '{{displayValue}}' }}</div>
+        <div id="calc-buttons">
+          <div id="calc-numbers">
+            <a class="row">C</a>
+            <a>1</a>
+            <a>2</a>
+            <a>3</a>
+            <a>4</a>
+            <a>5</a>
+            <a>6</a>
+            <a>7</a>
+            <a>8</a>
+            <a>9</a>
+            <a class="wide">0</a>
+            <a>.</a>
+          </div>
+          <div id="calc-functions">
+            <a>+</a>
+            <a>-</a>
+            <a>*</a>
+            <a>/</a>
+            <a>=</a>
+          </div>
+        </div>
       </div>
     </div>
   </body>
