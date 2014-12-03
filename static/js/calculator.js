@@ -4,13 +4,16 @@ calculatorApp = angular.module('calculatorApp', []);
 calculatorApp.directive('broadcastKeypress', [
   '$document',
   '$rootScope',
-  function ($document, $rootScope) {
+  '$timeout',
+  function ($document, $rootScope, $timeout) {
     return {
       restrict: 'A',
       link: function () {
         $document.bind('keypress', function (e) {
           var character = String.fromCharCode(e.keyCode);
-          $rootScope.$broadcast('keypress', character);
+          $timeout(function () {
+            $rootScope.$broadcast('keypress', character);
+          });
         });
       }
     };
@@ -124,16 +127,19 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 
   // Routes input to processInput.
   $scope.$on('inputReceived', function (event, args) {
-    $scope.$apply(function () {
-      $scope.processInput(args[0]);
-    });
+    $scope.processInput(args[0]);
   });
 }]);
 
+// Handles input from either keypress or buttons, broadcasts the data on the scope.
 calculatorApp.controller('InputController', ['$scope', function ($scope) {
   $scope.$on('keypress', function (event, args) {
     $scope.$broadcast('inputReceived', args[0]);
   });
+  $scope.handleButtonClick = function(input) {
+    console.log(input);
+    $scope.$broadcast('inputReceived', input);
+  };
 }]);
 
 // Kind of gross, but I really didn't want it to do it.
