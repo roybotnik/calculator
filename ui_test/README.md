@@ -1,10 +1,10 @@
-*Note: This readme concerns the UI components only.*
+*Note: This readme covers JavaScript testing only.*
 
 The JavaScript UI components in this folder have a test suite which can be run via [node.js](http://nodejs.org/), [gulp](http://gulpjs.com/), and [karma](http://karma-runner.github.io/0.12/index.html).
 
 ---
 
-All of the following commands should be run from within the ui directory.
+All of the following commands should be run from within the ui_test directory.
 
 To install required dependencies, run the following:
 ```
