@@ -21,6 +21,7 @@ body {
   word-wrap: break-word;
 }
 #calc-buttons a {
+  text-decoration: none;
   float: left;
   width: 40px;
   text-align: center;

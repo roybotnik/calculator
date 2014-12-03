@@ -137,8 +137,11 @@ calculatorApp.controller('InputController', ['$scope', function ($scope) {
     $scope.$broadcast('inputReceived', args[0]);
   });
   $scope.handleButtonClick = function(input) {
+    if (typeof(input) === 'string') {
+      input = input.toLowerCase();
+    }
     console.log(input);
-    $scope.$broadcast('inputReceived', input);
+    $scope.$broadcast('inputReceived', [input]);
   };
 }]);
 
