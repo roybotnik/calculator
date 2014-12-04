@@ -80,5 +80,74 @@ describe("calculatorApp", function () {
         expect($scope.handleOperatorInput.calls.count()).toBe(0);
       });
     });
+
+    describe("handleClearInput", function () {
+      it("clear the appropriate values", function () {
+        $scope.displayValue = 123123;
+        $scope.operator = '+';
+        $scope.firstOperand = '123122';
+        $scope.secondOperand = '1';
+
+        $scope.handleClearInput();
+
+        expect($scope.displayValue).toBe(0);
+        expect($scope.operator).toBe(null);
+        expect($scope.firstOperand).toBe('');
+        expect($scope.secondOperand).toBe('');
+      });
+    });
+
+    describe("handleEqualsInput", function () {
+      it("kickoff calculation", function () {
+        spyOn($scope, 'calculate');
+        $scope.handleEqualsInput();
+        expect($scope.calculate).toHaveBeenCalled();
+      });
+    });
+
+    describe("handleOperatorInput", function () {
+      it("should set the operator if one is no set then update the display value", function () {
+        $scope.firstOperand = '123';
+        $scope.handleOperatorInput('+');
+        expect($scope.operator).toBe('+');
+        expect($scope.displayValue).toBe('123 +');
+      });
+
+      it("should calculate if the user already supplied a full expression", function () {
+        $scope.firstOperand = '123';
+        $scope.operator = '+';
+        $scope.secondOperand = '1';
+        spyOn($scope, 'calculate');
+        $scope.handleOperatorInput('+');
+        expect($scope.calculate).toHaveBeenCalled();
+        expect($scope.secondOperand).toBe('');
+      });
+    });
+
+    describe("handleDigitInput", function () {
+      it("should update the first operand if no operator has been provided", function () {
+        $scope.handleDigitInput('1');
+        expect($scope.firstOperand).toBe('1');
+        expect($scope.displayValue).toBe('1');
+      });
+
+      it("should update the second operand if the operator has been provided", function () {
+        $scope.firstOperand = '1';
+        $scope.operator = '+';
+        $scope.handleDigitInput('1');
+        expect($scope.secondOperand).toBe('1');
+        expect($scope.displayValue).toBe('1 + 1');
+      });
+    });
+
+    describe("newValueForOperand", function () {
+      it("should only allow one decimal to be inserted", function () {
+        var result = $scope.newValueForOperand('1', '.');
+        expect(result).toBe('1.');
+
+        var result = $scope.newValueForOperand('1.1', '.');
+        expect(result).toBe('1.1');
+      });
+    });
   });
 });
