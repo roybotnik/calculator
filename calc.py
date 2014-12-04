@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+from nsp import NumericStringParser
 from flask import Flask, render_template, request, jsonify, abort
 
 app = Flask(__name__)
@@ -13,9 +14,12 @@ def index():
 @app.route('/api/v1/calculation/result', methods=['GET'])
 def calculate():
   expression = request.args.get('expression')
+
   if expression is None:
     abort(404)
-  result = eval(expression)
+
+  nsp = NumericStringParser()
+  result = nsp.eval(expression)
   return jsonify({'result': result})
 
 if __name__ == '__main__':
