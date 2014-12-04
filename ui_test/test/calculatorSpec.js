@@ -31,6 +31,12 @@ describe("calculatorApp", function () {
     });
 
     describe("processInput", function () {
+      it("should do nothing if calculating is true", function () {
+        spyOn($scope, 'handleClearInput').and.callThrough();
+        $scope.calculating = true;
+        $scope.processInput('c');
+        expect($scope.handleClearInput.calls.count()).toBe(0);
+      });
       it("should handle c as clear", function () {
         spyOn($scope, 'handleClearInput').and.callThrough();
         $scope.processInput('c');

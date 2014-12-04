@@ -19,7 +19,7 @@ calculatorApp.directive('broadcastKeypress', [
   }
 ]);
 
-calculatorApp.controller('CalculationController', ['$scope', function($scope) {
+calculatorApp.controller('CalculationController', ['$scope', '$http', function($scope, $http) {
   $scope.displayValue = 0;
   $scope.operator = null;
   $scope.repeatOperator = null;
@@ -27,6 +27,9 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.firstOperand = '';
   $scope.secondOperand = '';
   $scope.allowedOperators = ['+','-','/','*'];
+  $scope.calculating = false;
+  $scope.calculationResult = null;
+  $scope.lastCalculationError = null;
 
   // Performs a calculation using the first and second operands and the operator.
   $scope.calculate = function () {
@@ -34,11 +37,16 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     var secondOperand = $scope.secondOperand || $scope.repeatOperand;
     var result;
     if ($scope.firstOperand && operator && secondOperand) {
-      result = eval($scope.firstOperand + operator + secondOperand);
-      $scope.firstOperand = result;
-      $scope.displayValue = result;
+      var expression = $scope.firstOperand + operator + secondOperand;
+      var expression = encodeURIComponent(expression);
+      $scope.$broadcast('calculationStarted');
+      $http.get("/api/v1/calculation/result?expression=" + expression)
+        .success(function(data, status, headers, config) {
+          $scope.$broadcast('calculationFinished', data.result);
+        }).error(function(data, status) {
+          $scope.$broadcast('calculationFailed', data);
+        });
     }
-    return result;
   };
 
   // Determines whether a character is an operator
@@ -49,6 +57,10 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   // Processes input values.
   // Routes the various character types to the appropriate action.
   $scope.processInput = function (input) {
+    if ($scope.calculating) {
+      return;
+    }
+
     if (input === 'c') {
       $scope.handleClearInput();
       return;
@@ -80,13 +92,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   // Performs calculation and stores values for repeat usage.
   // To be executed when = is pressed.
   $scope.handleEqualsInput = function () {
-    var result = $scope.calculate();
-    if (result && $scope.operator) {
-      $scope.repeatOperator = $scope.operator;
-      $scope.repeatOperand = $scope.secondOperand;
-      $scope.operator = null;
-      $scope.secondOperand = '';
-    }
+    $scope.calculate();
   };
 
   // Sets the current operator and performs calculation if this
@@ -131,6 +137,35 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.$on('inputReceived', function (event, args) {
     $scope.processInput(args[0]);
   });
+
+  $scope.$on('calculationStarted', function (event, args) {
+    $scope.calculating = true;
+  });
+
+  $scope.$on('calculationFinished', function (event, args) {
+    var result = args;
+
+    $scope.calculating = false;
+    if (result) {
+      $scope.result = result;
+      $scope.firstOperand = result;
+      $scope.displayValue = result;
+    }
+
+    // Cache old operator and second operand if operator exists.
+    // Only used for repeated presses of =
+    if ($scope.operator) {
+      $scope.repeatOperator = $scope.operator;
+      $scope.repeatOperand = $scope.secondOperand;
+      $scope.operator = null;
+      $scope.secondOperand = '';
+    }
+  });
+
+  $scope.$on('calculationFailed', function (event, args) {
+    $scope.calculating = false;
+    $scope.lastCalculationError = args[0];
+  });
 }]);
 
 // Handles input from either keypress or buttons, broadcasts the data on the scope.
@@ -142,7 +177,6 @@ calculatorApp.controller('InputController', ['$scope', function ($scope) {
     if (typeof(input) === 'string') {
       input = input.toLowerCase();
     }
-    console.log(input);
     $scope.$broadcast('inputReceived', [input]);
   };
 }]);
