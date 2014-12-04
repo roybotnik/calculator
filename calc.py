@@ -19,7 +19,12 @@ def calculate():
     abort(404)
 
   nsp = NumericStringParser()
-  result = nsp.eval(expression)
+
+  try:
+    result = nsp.eval(expression)
+  except:
+    abort(500)
+
   return jsonify({'result': result})
 
 if __name__ == '__main__':
