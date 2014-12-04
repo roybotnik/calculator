@@ -5,12 +5,13 @@ describe("calculatorApp", function () {
 
   describe("CalculationController", function () {
     var $scope;
+    var controller;
 
     beforeEach(module('calculatorApp'));
 
     beforeEach(inject(function($rootScope, $controller) {
       $scope = $rootScope.$new();
-      $controller('CalculationController', {$scope: $scope});
+      controller = $controller('CalculationController', {$scope: $scope});
     }));
 
     it("should have appropriate default values", function () {
@@ -21,6 +22,12 @@ describe("calculatorApp", function () {
       expect($scope.firstOperand).toBe('');
       expect($scope.secondOperand).toBe('');
       expect($scope.allowedOperators).toEqual(['+','-','/','*']);
+    });
+
+    it("should listen to inputReceived events and process them", function () {
+      spyOn($scope, 'processInput').and.callThrough();
+      $scope.$broadcast('inputReceived', '+');
+      expect($scope.processInput).toHaveBeenCalled();
     });
   });
 });
