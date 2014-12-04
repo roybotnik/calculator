@@ -1,6 +1,5 @@
 calculatorApp = angular.module('calculatorApp', []);
 
-
 calculatorApp.directive('broadcastKeypress', [
   '$document',
   '$rootScope',
