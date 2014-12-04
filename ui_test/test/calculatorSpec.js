@@ -29,5 +29,50 @@ describe("calculatorApp", function () {
       $scope.$broadcast('inputReceived', '+');
       expect($scope.processInput).toHaveBeenCalled();
     });
+
+    describe("processInput", function () {
+      it("should handle c as clear", function () {
+        spyOn($scope, 'handleClearInput').and.callThrough();
+        $scope.processInput('c');
+        expect($scope.handleClearInput).toHaveBeenCalled();
+      });
+
+      it("should handle equals as equals", function () {
+        spyOn($scope, 'handleEqualsInput').and.callThrough();
+        $scope.processInput('=');
+        expect($scope.handleEqualsInput).toHaveBeenCalled();
+      });
+
+      it("should handle an operator as an operator if the first operand is present", function () {
+        $scope.firstOperand = '1';
+        spyOn($scope, 'handleOperatorInput').and.callThrough();
+        $scope.processInput('+');
+        expect($scope.handleOperatorInput).toHaveBeenCalled();
+      });
+
+      it("should handle digits", function () {
+        spyOn($scope, 'handleDigitInput');
+        $scope.processInput('1');
+        expect($scope.handleDigitInput).toHaveBeenCalled();
+      });
+
+      it("should handle . as a digit", function () {
+        spyOn($scope, 'handleDigitInput');
+        $scope.processInput('.');
+        expect($scope.handleDigitInput).toHaveBeenCalled();
+      });
+
+      it("should ignore an operator if the first operand is not present", function () {
+        spyOn($scope, 'handleOperatorInput');
+        $scope.processInput('+');
+        expect($scope.handleOperatorInput.calls.count()).toBe(0);
+      });
+
+      it("should ignore an operator if the first operand is not present", function () {
+        spyOn($scope, 'handleOperatorInput');
+        $scope.processInput('+');
+        expect($scope.handleOperatorInput.calls.count()).toBe(0);
+      });
+    });
   });
 });

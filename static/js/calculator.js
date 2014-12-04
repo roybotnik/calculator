@@ -32,9 +32,12 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
   $scope.calculate = function () {
     var operator = $scope.operator || $scope.repeatOperator;
     var secondOperand = $scope.secondOperand || $scope.repeatOperand;
-    var result = eval($scope.firstOperand + operator + secondOperand);
-    $scope.firstOperand = result;
-    $scope.displayValue = result;
+    var result;
+    if ($scope.firstOperand && operator && secondOperand) {
+      result = eval($scope.firstOperand + operator + secondOperand);
+      $scope.firstOperand = result;
+      $scope.displayValue = result;
+    }
     return result;
   };
 
@@ -52,7 +55,7 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
     }
 
     if (input === '=') {
-      $scope.handleEqualsInput(input);
+      $scope.handleEqualsInput();
       return;
     }
 
@@ -76,9 +79,9 @@ calculatorApp.controller('CalculationController', ['$scope', function($scope) {
 
   // Performs calculation and stores values for repeat usage.
   // To be executed when = is pressed.
-  $scope.handleEqualsInput = function (input) {
-    $scope.calculate();
-    if ($scope.operator) {
+  $scope.handleEqualsInput = function () {
+    var result = $scope.calculate();
+    if (result && $scope.operator) {
       $scope.repeatOperator = $scope.operator;
       $scope.repeatOperand = $scope.secondOperand;
       $scope.operator = null;
