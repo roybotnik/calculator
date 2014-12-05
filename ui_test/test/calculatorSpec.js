@@ -117,7 +117,7 @@ describe("calculatorApp", function () {
         $scope.firstOperand = '123';
         $scope.operator = '+';
         $scope.secondOperand = '1';
-        spyOn($scope, 'calculate');
+        spyOn($scope, 'calculate').and.returnValue({then:function(){}});
         $scope.handleOperatorInput('+');
         expect($scope.calculate).toHaveBeenCalled();
         expect($scope.secondOperand).toBe('');
