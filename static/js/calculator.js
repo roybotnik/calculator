@@ -40,7 +40,7 @@ calculatorApp.controller('CalculationController', ['$scope', '$http', function($
       var expression = $scope.firstOperand + operator + secondOperand;
       var expression = encodeURIComponent(expression);
       $scope.$broadcast('calculationStarted');
-      $http.get("/api/v1/calculation/result?expression=" + expression)
+      return $http.get("/api/v1/calculation/result?expression=" + expression)
         .success(function(data, status, headers, config) {
           $scope.$broadcast('calculationFinished', data.result);
         }).error(function(data, status) {
@@ -100,7 +100,11 @@ calculatorApp.controller('CalculationController', ['$scope', '$http', function($
   // already been set.
   $scope.handleOperatorInput = function (input) {
     if ($scope.secondOperand && $scope.operator) {
-      $scope.calculate();
+      // Override default success
+      $scope.calculate().then(function () {
+        $scope.operator = input;
+        $scope.displayValue = $scope.firstOperand + " " + input;
+      });
       $scope.secondOperand = '';
     }
     $scope.operator = input;
